@@ -3,14 +3,14 @@
   become: yes
   tasks: 
   - name: Setup npm source
-    ansible.builtin.shell: curl -sL https://rpm.nodesource.com/setup_lts.x | bash
-  
+    ansible.builtin.shell: "curl -sL https://rpm.nodesource.com/setup_lts.x | bash"
+
   - name: Install NodeJS
     ansible.builtin.yum:
-      name: NodeJS
+      name: nodejs
       state: installed
   
-  - name: check whether the user exists or not
+  - name: check whether the roboshop user exists or not
     ansible.builtin.command: id roboshop
     register: output # output is variable name
     ignore_errors: true
@@ -24,9 +24,11 @@
   - name: Check whether /app directory exists or not
     ansible.builtin.stat:
       path: /app
-      register: directory
+    register: directory
 
   - name: print the directory stats
     ansible.builtin.debug:
       msg: "output: {{directory}}"
+
+  
     
