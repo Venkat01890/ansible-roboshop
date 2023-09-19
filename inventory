@@ -24,3 +24,6 @@ shipping.practicedevops.shop
 
 [rabbitmq]
 rabbitmq.practicedevops.shop
+
+[payment]
+payment.practicedevops.shop
