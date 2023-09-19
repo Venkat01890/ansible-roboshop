@@ -72,7 +72,7 @@
       state: installed
 
   - name: Load user data
-    ansible.builtin.command: mongo --host mongodb.practicedevops.shop < /app/schema/user.js
+    ansible.builtin.shell: mongo --host mongodb.practicedevops.shop < /app/schema/user.js
 
   - name: Restart user
     ansible.builtin.service:
