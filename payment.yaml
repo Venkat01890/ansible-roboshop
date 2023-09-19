@@ -9,7 +9,7 @@
     loop: 
     - python36
     - gcc
-    - python-devel
+    - python3-devel
 
   - name: check whether the roboshop user exists or not
     ansible.builtin.command: id roboshop
