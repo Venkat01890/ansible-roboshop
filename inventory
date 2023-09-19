@@ -9,3 +9,6 @@ web.practicedevops.shop
 
 [redis]
 redis.practicedevops.shop
+
+[user]
+user.practicedevops.shop

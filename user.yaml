@@ -1,0 +1,81 @@
+- name: Install user component
+  hosts: user
+  become: yes
+  tasks: 
+  - name: Setup npm source
+    ansible.builtin.shell: "curl -sL https://rpm.nodesource.com/setup_lts.x | bash"
+
+  - name: Install NodeJS
+    ansible.builtin.yum:
+      name: nodejs
+      state: installed
+  
+  - name: check whether the roboshop user exists or not
+    ansible.builtin.command: id roboshop
+    register: output # output is variable name
+    ignore_errors: true
+
+  - when: output.rc != 0  
+    name: create user roboshop
+    become: yes # we need sudo access for this task only
+    ansible.builtin.user:
+      name: roboshop
+  
+  - name: Check whether /app directory exists or not
+    ansible.builtin.stat:
+      path: /app
+    register: directory
+
+  - name: print the directory stats
+    ansible.builtin.debug:
+      msg: "output: {{directory}}"
+
+  - when: directory.stat.exists == False
+    name: Create /app directory
+    ansible.builtin.file:
+      path: /app
+      state: directory
+
+  - name: Download user artifact
+    ansible.builtin.get_url:
+      url: https://roboshop-builds.s3.amazonaws.com/user.zip
+      dest: /tmp
+  
+  - name: Extract user artifact
+    ansible.builtin.unarchive:
+      src: /tmp/user.zip
+      dest: /app
+      remote_src: yes
+
+  - name: Install dependencies
+    ansible.builtin.command: npm install
+    args:
+      chdir: /app
+
+  - name: Copy user service
+    ansible.builtin.copy:
+      src: user.service
+      dest: /etc/systemd/system/user.service
+
+  - name: daemon reload
+    ansible.builtin.systemd:
+      daemon_reload: true
+
+  - name: copy mongo repo to yum.repos.d
+    ansible.builtin.copy:
+      src: mongodb.repo
+      dest: /etc/yum.repos.d/mongo.repo
+
+  - name: Install MongoDB
+    ansible.builtin.yum:
+      name: mongodb-org-shell
+      state: installed
+
+  - name: Load user data
+    ansible.builtin.command: mongo --host mongodb.practicedevops.shop < /app/schema/user.js
+
+  - name: Restart user
+    ansible.builtin.service:
+      name: user
+      state: restarted
+      enabled: true
