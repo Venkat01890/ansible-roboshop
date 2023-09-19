@@ -21,3 +21,6 @@ mysql.practicedevops.shop
 
 [shipping]
 shipping.practicedevops.shop
+
+[rabbitmq]
+rabbitmq.practicedevops.shop
