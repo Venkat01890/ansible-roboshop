@@ -6,3 +6,6 @@ catalogue.practicedevops.shop
 
 [web]
 web.practicedevops.shop
+
+[redis]
+redis.practicedevops.shop
