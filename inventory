@@ -12,3 +12,6 @@ redis.practicedevops.shop
 
 [user]
 user.practicedevops.shop
+
+[cart]
+cart.practicedevops.shop
